@@ -12,6 +12,7 @@
 package org.usfirst.frc6133.Steamworks.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc6133.Steamworks.Robot;
+import org.usfirst.frc6133.Steamworks.RobotMap;
 
 /**
  *
@@ -41,6 +42,7 @@ public class JoyDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.drivetrain.debugJoystick(Robot.oi.getJoystick());
     }
 
     // Make this return true when this Command no longer needs to run execute()
