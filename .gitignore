@@ -45,16 +45,3 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-*.classpath
-.classpath~
-*.project
-.project~
-bin/BSD_License_for_WPILib_code.txt
-*.class
-*.java~
-build.xml~
-build.properties~
-BSD_License_for_WPILib_code.txt~
-BSD_License_for_WPILib_code.txt
-bin/build.xml
-bin/build.properties
