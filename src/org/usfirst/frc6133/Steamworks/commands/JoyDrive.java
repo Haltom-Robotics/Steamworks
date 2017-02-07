@@ -12,7 +12,6 @@
 package org.usfirst.frc6133.Steamworks.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc6133.Steamworks.Robot;
-import org.usfirst.frc6133.Steamworks.RobotMap;
 
 /**
  *
@@ -38,11 +37,12 @@ public class JoyDrive extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.drivetrain.initFollower();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drivetrain.debugJoystick(Robot.oi.getJoystick());
+    	Robot.drivetrain.takeJoystickInputs(Robot.oi.getJoystick());
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -52,10 +52,12 @@ public class JoyDrive extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.drivetrain.stop();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }
