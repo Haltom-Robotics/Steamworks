@@ -61,6 +61,9 @@ public class Drivetrain extends Subsystem {
     	moveValue = Math.pow(joystick.getRawAxis(1),2) * joystick.getRawAxis(3);
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = joystick.getRawAxis(3) * Math.pow(joystick.getRawAxis(2),3);
+    	rotateValue *= joystick.getRawAxis(3) > 0 ? 1 : -1;
+    	rotateValue = rotateValue > .5 ? .5 : rotateValue;
+    	rotateValue = rotateValue < -.5 ? -.5 : rotateValue;
     	
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
     	robotDrive.arcadeDrive(moveValue, rotateValue);
