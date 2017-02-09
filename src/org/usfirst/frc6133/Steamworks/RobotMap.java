@@ -50,7 +50,7 @@ public class RobotMap {
         drivetrainRightMotor1 = new CANTalon(2);
         drivetrainRightMotor2 = new CANTalon(4);
         drivetrainRightMotor3 = new CANTalon(6);
-        
+
         drivetrainRobotDrive = new RobotDrive(drivetrainLeftMotor1, drivetrainRightMotor1);
         
         drivetrainRobotDrive.setSafetyEnabled(true);
