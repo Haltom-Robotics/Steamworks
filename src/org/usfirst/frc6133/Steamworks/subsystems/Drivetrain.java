@@ -58,15 +58,49 @@ public class Drivetrain extends Subsystem {
     
     public void takeJoystickInputs(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
-    	moveValue = Math.pow(joystick.getRawAxis(1),2) * joystick.getRawAxis(3);
+    	moveValue = joystick.getRawAxis(1) * joystick.getRawAxis(3);
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = joystick.getRawAxis(3) * Math.pow(joystick.getRawAxis(2),3);
     	rotateValue *= joystick.getRawAxis(3) > 0 ? 1 : -1;
-    	rotateValue = rotateValue > .5 ? .5 : rotateValue;
-    	rotateValue = rotateValue < -.5 ? -.5 : rotateValue;
+    	rotateValue = Math.min(rotateValue, .7);
+    	rotateValue = Math.max(rotateValue, -.7);
     	
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
-    	robotDrive.arcadeDrive(moveValue, rotateValue);
+    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+    	//the remaining left & right motors need to mimic the base motors
+    	leftMotor2.set(leftMotor1.getDeviceID());
+    	leftMotor3.set(leftMotor1.getDeviceID());
+    	rightMotor2.set(rightMotor1.getDeviceID());
+    	rightMotor3.set(rightMotor1.getDeviceID());
+    }
+    
+    public void takeJoystickInputs2(GenericHID joystick) {
+    	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
+    	moveValue = joystick.getRawAxis(1) * (joystick.getRawAxis(3)+1)/2;
+    	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
+    	rotateValue = (joystick.getRawAxis(3)+1)/2 * Math.pow(joystick.getRawAxis(2),3);
+    	rotateValue = Math.min(rotateValue, .7);
+    	rotateValue = Math.max(rotateValue, -.7);
+    	
+    	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
+    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+    	//the remaining left & right motors need to mimic the base motors
+    	leftMotor2.set(leftMotor1.getDeviceID());
+    	leftMotor3.set(leftMotor1.getDeviceID());
+    	rightMotor2.set(rightMotor1.getDeviceID());
+    	rightMotor3.set(rightMotor1.getDeviceID());
+    }
+    
+    public void takeJoystickInputs3(GenericHID joystick) {
+    	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
+    	moveValue = joystick.getRawAxis(2)*-1+ joystick.getRawAxis(3);
+    	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
+    	rotateValue = joystick.getRawAxis(0);
+    	rotateValue = Math.min(rotateValue, .7);
+    	rotateValue = Math.max(rotateValue, -.7);
+    	
+    	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
+    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	//the remaining left & right motors need to mimic the base motors
     	leftMotor2.set(leftMotor1.getDeviceID());
     	leftMotor3.set(leftMotor1.getDeviceID());
