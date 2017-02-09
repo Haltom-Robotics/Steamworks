@@ -32,12 +32,15 @@ public class SwitchJoystickStyle extends Command {
     	case 2:
     		switchStyleCommand = new JoyDrive3();
     		break;
+    	default:
+    		switchStyleCommand = new JoyDrive();
+    		break;
     	}
+    	switchStyleCommand.start();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
