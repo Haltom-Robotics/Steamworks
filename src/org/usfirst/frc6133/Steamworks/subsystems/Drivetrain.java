@@ -31,8 +31,8 @@ public class Drivetrain extends Subsystem {
     private final CANTalon leftMotor2 = RobotMap.drivetrainLeftMotor2;
     private final CANTalon leftMotor3 = RobotMap.drivetrainLeftMotor3;
     private final CANTalon rightMotor1 = RobotMap.drivetrainRightMotor1;
-    private final CANTalon rightMotor2 = RobotMap.drivetrainLeftMotor2;
-    private final CANTalon rightMotor3 = RobotMap.drivetrainLeftMotor3;
+    private final CANTalon rightMotor2 = RobotMap.drivetrainRightMotor2;
+    private final CANTalon rightMotor3 = RobotMap.drivetrainRightMotor3;
     private final RobotDrive robotDrive = RobotMap.drivetrainRobotDrive;
 
     private double moveValue;
