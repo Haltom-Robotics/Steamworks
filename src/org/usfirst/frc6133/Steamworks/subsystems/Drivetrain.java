@@ -58,7 +58,7 @@ public class Drivetrain extends Subsystem {
     
     public void takeJoystickInputs(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
-    	moveValue = joystick.getRawAxis(1) * joystick.getRawAxis(3);
+    	moveValue = joystick.getRawAxis(1) * joystick.getRawAxis(3)*-1;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = joystick.getRawAxis(3) * Math.pow(joystick.getRawAxis(2),3);
     	rotateValue *= joystick.getRawAxis(3) > 0 ? 1 : -1;
@@ -76,7 +76,7 @@ public class Drivetrain extends Subsystem {
     
     public void takeJoystickInputs2(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
-    	moveValue = joystick.getRawAxis(1) * (joystick.getRawAxis(3)+1)/2;
+    	moveValue = joystick.getRawAxis(1) * -1*(joystick.getRawAxis(3)-1)/2;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = (joystick.getRawAxis(3)+1)/2 * Math.pow(joystick.getRawAxis(2),3);
     	rotateValue = Math.min(rotateValue, .7);
@@ -93,7 +93,7 @@ public class Drivetrain extends Subsystem {
     
     public void takeJoystickInputs3(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
-    	moveValue = joystick.getRawAxis(2)*-1+ joystick.getRawAxis(3);
+    	moveValue = joystick.getRawAxis(2)+ joystick.getRawAxis(3)*-1;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = joystick.getRawAxis(0);
     	rotateValue = Math.min(rotateValue, .7);
@@ -107,7 +107,6 @@ public class Drivetrain extends Subsystem {
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
     }
-    
 
 }
 
