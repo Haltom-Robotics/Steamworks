@@ -14,6 +14,8 @@ package org.usfirst.frc6133.Steamworks.subsystems;
 import org.usfirst.frc6133.Steamworks.RobotMap;
 import org.usfirst.frc6133.Steamworks.commands.*;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 
@@ -21,10 +23,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Winch extends Subsystem {
-
-
-    public void initDefaultCommand() {
-        // setDefaultCommand(new MySpecialCommand());
+	private final CANTalon winchMotor = RobotMap.winchMotor;
+	
+	public void initDefaultCommand() {
+		setDefaultCommand(new StopWinch());
     }
+	
+	public void stop() {
+		winchMotor.set(0);
+	}
+	
+	public void triggerWinch() {
+		winchMotor.set(1);
+	}
 }
 
