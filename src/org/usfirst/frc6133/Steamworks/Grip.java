@@ -32,6 +32,13 @@ public class Grip implements VisionPipeline {
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
+	private final int IMG_WIDTH = 320;
+	private final int IMG_HEIGHT = 240;
+	private double center;
+	private double deltaX;
+	private Rect r1;
+	private Rect r2;
+	
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -217,7 +224,39 @@ public class Grip implements VisionPipeline {
 		}
 	}
 
-
+	/**
+	 * 
+	 * 
+	 */
+	private void findCenterX() {
+				
+		if (convexHullsOutput.isEmpty())
+			center = -2.0;
+		else if (convexHullsOutput.size() < 2)
+			center = -1.0;
+		else if (convexHullsOutput.size() > 2)
+			center = -3.0;
+		else {
+			r1 = Imgproc.boundingRect(convexHullsOutput.get(0));
+			r2 = Imgproc.boundingRect(convexHullsOutput.get(1));
+		
+			center = (r1.x + (r1.width / 2) + r2.x + (r2.width / 2)) / 2;
+		}
+	}
+	
+	/**
+	 * 
+	 * 
+	 */
+	public double reportDeltaX() {
+		findCenterX();
+		if (center < 0)
+			deltaX = center * 1000;
+		else
+			deltaX = center - (IMG_WIDTH / 2.0);
+		
+		return deltaX;
+	}
 
 
 }
