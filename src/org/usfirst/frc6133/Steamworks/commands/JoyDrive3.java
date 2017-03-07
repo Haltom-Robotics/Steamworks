@@ -42,7 +42,9 @@ public class JoyDrive3 extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.drivetrain.takeJoystickInputs3(Robot.oi.get_xBoxJoystick());
+    	//Robot.drivetrain.takeJoystickInputs3(Robot.oi.get_xBoxJoystick());
+    	//if (Robot.ahrs != null)
+    	//	Robot.drivetrain.DataMonitor();
     }
 
     // Make this return true when this Command no longer needs to run execute()

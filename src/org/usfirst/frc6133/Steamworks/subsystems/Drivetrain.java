@@ -19,11 +19,13 @@ import com.ctre.CANTalon.TalonControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
@@ -38,14 +40,24 @@ public class Drivetrain extends Subsystem {
     private final CANTalon rightMotor2 = RobotMap.drivetrainRightMotor2;
     private final CANTalon rightMotor3 = RobotMap.drivetrainRightMotor3;
     private final RobotDrive robotDrive = RobotMap.drivetrainRobotDrive;
-    private final AHRS ahrs = Robot.ahrs;
+    //private final AHRS ahrs = Robot.ahrs;
 
     private double moveValue;
     private double rotateValue;
+    
+    private PIDController turnController;
+    
+    private static final double kP = 0.03;
+    private static final double kI = 0.00;
+    private static final double kD = 0.00;
+    private static final double kF = 0.00;
+
+    private static final double kToleranceDegrees = 2.0f;
+    private static double rotateAngle;
 
 
     public void initDefaultCommand() {
-        setDefaultCommand(new JoyDrive());
+        setDefaultCommand(new JoyDrive2());
     }
     
     //Called in the initialize phase of JoyDrive command.
@@ -57,55 +69,48 @@ public class Drivetrain extends Subsystem {
         rightMotor3.changeControlMode(TalonControlMode.Follower);
     }
     
-    public void DataMonitor(Joystick stick) {
-    	boolean zero_yaw_pressed = stick.getTrigger();
-        if ( zero_yaw_pressed ) {
-            ahrs.zeroYaw();
-        }
+    public void Gyro() {
+    	SmartDashboard.putNumber("Gyro Angle", RobotMap.gyro.getAngle());
+    	SmartDashboard.putNumber("Gyro Center", RobotMap.gyro.getCenter());
+    	SmartDashboard.putNumber("Gyro Offset", RobotMap.gyro.getOffset());
+    	SmartDashboard.putNumber("Gyro Rate", RobotMap.gyro.getRate());
+    	Timer.delay(0.005);
+    }
+    
+    /*
+    public void DataMonitor() {
+    	//boolean zero_yaw_pressed = stick.getTrigger();
+    	//System.out.println(ahrs.isConnected());
+        //if ( zero_yaw_pressed ) {
+        //    ahrs.zeroYaw();
+        //}
 
-        /* Display 6-axis Processed Angle Data                                      */
         SmartDashboard.putBoolean(  "IMU_Connected",        ahrs.isConnected());
         SmartDashboard.putBoolean(  "IMU_IsCalibrating",    ahrs.isCalibrating());
         SmartDashboard.putNumber(   "IMU_Yaw",              ahrs.getYaw());
-        SmartDashboard.putNumber(   "IMU_Pitch",            ahrs.getPitch());
-        SmartDashboard.putNumber(   "IMU_Roll",             ahrs.getRoll());
-        
-        /* Display tilt-corrected, Magnetometer-based heading (requires             */
-        /* magnetometer calibration to be useful)                                   */
-        
-        SmartDashboard.putNumber(   "IMU_CompassHeading",   ahrs.getCompassHeading());
-        
-        /* Display 9-axis Heading (requires magnetometer calibration to be useful)  */
-        SmartDashboard.putNumber(   "IMU_FusedHeading",     ahrs.getFusedHeading());
+        //SmartDashboard.putNumber(   "IMU_Pitch",            ahrs.getPitch());
+        //SmartDashboard.putNumber(   "IMU_Roll",             ahrs.getRoll());
 
-        /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
-        /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
+        
+        //SmartDashboard.putNumber(   "IMU_CompassHeading",   ahrs.getCompassHeading());
+
+        //SmartDashboard.putNumber(   "IMU_FusedHeading",     ahrs.getFusedHeading());
+
         
         SmartDashboard.putNumber(   "IMU_TotalYaw",         ahrs.getAngle());
-        SmartDashboard.putNumber(   "IMU_YawRateDPS",       ahrs.getRate());
+        //SmartDashboard.putNumber(   "IMU_YawRateDPS",       ahrs.getRate());
 
-        /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
         
-        SmartDashboard.putNumber(   "IMU_Accel_X",          ahrs.getWorldLinearAccelX());
-        SmartDashboard.putNumber(   "IMU_Accel_Y",          ahrs.getWorldLinearAccelY());
+        //SmartDashboard.putNumber(   "IMU_Accel_X",          ahrs.getWorldLinearAccelX());
+        //SmartDashboard.putNumber(   "IMU_Accel_Y",          ahrs.getWorldLinearAccelY());
         SmartDashboard.putBoolean(  "IMU_IsMoving",         ahrs.isMoving());
         SmartDashboard.putBoolean(  "IMU_IsRotating",       ahrs.isRotating());
+        
+        //SmartDashboard.putNumber(   "Velocity_X",           ahrs.getVelocityX());
+        //SmartDashboard.putNumber(   "Velocity_Y",           ahrs.getVelocityY());
+        //SmartDashboard.putNumber(   "Displacement_X",       ahrs.getDisplacementX());
+        //SmartDashboard.putNumber(   "Displacement_Y",       ahrs.getDisplacementY());
 
-        /* Display estimates of velocity/displacement.  Note that these values are  */
-        /* not expected to be accurate enough for estimating robot position on a    */
-        /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
-        /* of these errors due to single (velocity) integration and especially      */
-        /* double (displacement) integration.                                       */
-        
-        SmartDashboard.putNumber(   "Velocity_X",           ahrs.getVelocityX());
-        SmartDashboard.putNumber(   "Velocity_Y",           ahrs.getVelocityY());
-        SmartDashboard.putNumber(   "Displacement_X",       ahrs.getDisplacementX());
-        SmartDashboard.putNumber(   "Displacement_Y",       ahrs.getDisplacementY());
-        
-        /* Display Raw Gyro/Accelerometer/Magnetometer Values                       */
-        /* NOTE:  These values are not normally necessary, but are made available   */
-        /* for advanced users.  Before using this data, please consider whether     */
-        /* the processed data (see above) will suit your needs.                     */
         
         SmartDashboard.putNumber(   "RawGyro_X",            ahrs.getRawGyroX());
         SmartDashboard.putNumber(   "RawGyro_Y",            ahrs.getRawGyroY());
@@ -119,44 +124,34 @@ public class Drivetrain extends Subsystem {
         SmartDashboard.putNumber(   "IMU_Temp_C",           ahrs.getTempC());
         SmartDashboard.putNumber(   "IMU_Timestamp",        ahrs.getLastSensorTimestamp());
         
-        /* Omnimount Yaw Axis Information                                           */
-        /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
-        AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-        SmartDashboard.putString(   "YawAxisDirection",     yaw_axis.up ? "Up" : "Down" );
-        SmartDashboard.putNumber(   "YawAxis",              yaw_axis.board_axis.getValue() );
+
+        //AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
+        //SmartDashboard.putString(   "YawAxisDirection",     yaw_axis.up ? "Up" : "Down" );
+        //SmartDashboard.putNumber(   "YawAxis",              yaw_axis.board_axis.getValue() );
+
+        //SmartDashboard.putString(   "FirmwareVersion",      ahrs.getFirmwareVersion());
         
-        /* Sensor Board Information                                                 */
-        SmartDashboard.putString(   "FirmwareVersion",      ahrs.getFirmwareVersion());
+        //SmartDashboard.putNumber(   "QuaternionW",          ahrs.getQuaternionW());
+        //SmartDashboard.putNumber(   "QuaternionX",          ahrs.getQuaternionX());
+        //SmartDashboard.putNumber(   "QuaternionY",          ahrs.getQuaternionY());
+        //SmartDashboard.putNumber(   "QuaternionZ",          ahrs.getQuaternionZ());
         
-        /* Quaternion Data                                                          */
-        /* Quaternions are fascinating, and are the most compact representation of  */
-        /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
-        /* from the Quaternions.  If interested in motion processing, knowledge of  */
-        /* Quaternions is highly recommended.                                       */
-        SmartDashboard.putNumber(   "QuaternionW",          ahrs.getQuaternionW());
-        SmartDashboard.putNumber(   "QuaternionX",          ahrs.getQuaternionX());
-        SmartDashboard.putNumber(   "QuaternionY",          ahrs.getQuaternionY());
-        SmartDashboard.putNumber(   "QuaternionZ",          ahrs.getQuaternionZ());
-        
-        /* Connectivity Debugging Support                                           */
-        SmartDashboard.putNumber(   "IMU_Byte_Count",       ahrs.getByteCount());
-        SmartDashboard.putNumber(   "IMU_Update_Count",     ahrs.getUpdateCount());
+        //SmartDashboard.putNumber(   "IMU_Byte_Count",       ahrs.getByteCount());
+        //SmartDashboard.putNumber(   "IMU_Update_Count",     ahrs.getUpdateCount());
         Timer.delay(0.005);
     }
-    
+    */
     public void stop() {
     	robotDrive.drive(0, 0);
     }
     
     public void takeJoystickInputs(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
-    	moveValue = joystick.getRawAxis(1) * joystick.getRawAxis(3)*-1;
+    	moveValue = joystick.getRawAxis(1);
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
-    	rotateValue = joystick.getRawAxis(3) * Math.pow(joystick.getRawAxis(2),3);
-    	rotateValue *= joystick.getRawAxis(3) > 0 ? 1 : -1;
-    	rotateValue = Math.min(rotateValue, .7);
-    	rotateValue = Math.max(rotateValue, -.7);
-    	
+    	rotateValue = joystick.getRawAxis(2);
+
+    	//System.out.println("\nMove Value: " + moveValue + "\nRotate Value: " + rotateValue);
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
     	robotDrive.arcadeDrive(moveValue, rotateValue, true);
     	//the remaining left & right motors need to mimic the base motors
@@ -170,12 +165,14 @@ public class Drivetrain extends Subsystem {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
     	moveValue = joystick.getRawAxis(1) * -1*(joystick.getRawAxis(3)-1)/2;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
-    	rotateValue = (joystick.getRawAxis(3)+1)/2 * Math.pow(joystick.getRawAxis(2),3);
+    	rotateValue = -1*(joystick.getRawAxis(3)-1)/2 * joystick.getRawAxis(2);
     	rotateValue = Math.min(rotateValue, .7);
     	rotateValue = Math.max(rotateValue, -.7);
-    	
+
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
-    	robotDrive.arcadeDrive(moveValue, rotateValue, true);
+    	robotDrive.arcadeDrive(moveValue, rotateValue);
+    	
+    	Timer.delay(0.005);
     	//the remaining left & right motors need to mimic the base motors
     	leftMotor2.set(leftMotor1.getDeviceID());
     	leftMotor3.set(leftMotor1.getDeviceID());
@@ -199,6 +196,12 @@ public class Drivetrain extends Subsystem {
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
     }
+    
+    public void updateRotateAngle(double newAngle) {
+    	rotateAngle = newAngle;
+    }
+    
+    
 
 }
 

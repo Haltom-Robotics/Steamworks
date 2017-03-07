@@ -1,8 +1,10 @@
 package org.usfirst.frc6133.Steamworks;
 
-import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -21,6 +23,7 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     public static AHRS ahrs;
+    public static Grip grip;
 
     public static OI oi;
     public static Drivetrain drivetrain;
@@ -28,6 +31,8 @@ public class Robot extends IterativeRobot {
     public static Winch winch;
 
     public static int joyMode = 0;
+    public static int autonMode = 0;
+    private static boolean isCalibrated = false;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -35,26 +40,46 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	RobotMap.init();
-    	try {
-        	ahrs = new AHRS(I2C.Port.kMXP);
-        } catch (RuntimeException e) {
-        	DriverStation.reportError("Error instatiating navx mico: " + e.getMessage(), true);
-        }
+    	//grip = new Grip();
+    	//grip.initCamera();
+    	//Timer.delay(2);
+    	//try {
+        //	ahrs = new AHRS(SerialPort.Port.kUSB);
+        	
+        	//System.out.println(ahrs.isConnected());
+        //} catch (RuntimeException e) {
+        //	System.out.println("Error instatiating navx mico: " + e.getMessage());
+        //}
         drivetrain = new Drivetrain();
-        shooter = new Shooter();
+        //shooter = new Shooter();
         winch = new Winch();
+        RobotMap.gyro.initGyro();
+        RobotMap.gyro.setSensitivity(0.015);
                
         oi = new OI();
+        
+        isCalibrated = false;
 
         autonomousCommand = new AutonomousCommand();
+        
     }
 
     /**
      * This function is called when the disabled button is hit.
      * You can use it to reset subsystems before shutting down.
      */
+    public void robotPeriodic() {
+    	if (!isCalibrated)
+    	{
+    		System.out.println("Calibrating gyro...");
+    		RobotMap.gyro.calibrate();
+    		System.out.println("Calibrated.");
+    		isCalibrated = true;
+    	}
+    	//System.out.println(RobotMap.gyro.getAngle());
+    }
     public void disabledInit(){
-
+    	
     }
 
     public void disabledPeriodic() {
@@ -62,7 +87,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        if (autonomousCommand != null) autonomousCommand.start();
+    	if (autonomousCommand != null) autonomousCommand.start();
     }
 
     /**
@@ -78,6 +103,13 @@ public class Robot extends IterativeRobot {
         // continue until interrupted by another command, remove
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
+        Scheduler.getInstance().removeAll();
+        //RobotMap.gyro.reset();
+        if (RobotMap.joySelect.getSelected() == "0") joyMode = 0;
+        if (RobotMap.joySelect.getSelected() == "1") joyMode = 1;
+        if (RobotMap.joySelect.getSelected() == "2") joyMode = 2;
+        autonomousCommand = new SwitchJoystickStyle();
+        autonomousCommand.start();
     }
 
     /**

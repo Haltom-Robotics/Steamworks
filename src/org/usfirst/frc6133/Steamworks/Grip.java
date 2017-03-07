@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.vision.VisionPipeline;
 
 import org.opencv.core.*;
@@ -39,9 +43,37 @@ public class Grip implements VisionPipeline {
 	private Rect r1;
 	private Rect r2;
 	
+	public int w1;
+	public int w2;
+	public int h1;
+	public int h2;
+	
+	private Mat source;
+	private CvSink cvSink;
+	private CvSource outputStream;
+	
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+	
+	public void initCamera() {
+		source = new Mat();
+		new Thread(() -> {
+        	RobotMap.USBcam = new UsbCamera("cam0",0);
+        	RobotMap.cam = CameraServer.getInstance();
+        	RobotMap.USBcam.setBrightness(10);
+        	RobotMap.USBcam.setFPS(10);
+        	RobotMap.USBcam.setResolution(320, 240);
+        	RobotMap.cam.startAutomaticCapture(RobotMap.USBcam);
+        	//cvSink = CameraServer.getInstance().getVideo();
+        	//outputStream = CameraServer.getInstance().putVideo("Raw Input", 160, 120);
+        	while(!Thread.interrupted()) {
+        		//cvSink.grabFrame(source);
+        		//if (grabSource) { System.out.println("Grabbing Source"); process(source); grabSource = false; }
+        		//outputStream.putFrame(source);
+        	}
+        }).start();
 	}
 
 	/**
@@ -239,6 +271,11 @@ public class Grip implements VisionPipeline {
 		else {
 			r1 = Imgproc.boundingRect(convexHullsOutput.get(0));
 			r2 = Imgproc.boundingRect(convexHullsOutput.get(1));
+			
+			w1 = r1.width;
+			w2 = r2.width;
+			h1 = r1.height;
+			h2 = r2.height;
 		
 			center = (r1.x + (r1.width / 2) + r2.x + (r2.width / 2)) / 2;
 		}
@@ -257,7 +294,13 @@ public class Grip implements VisionPipeline {
 		
 		return deltaX;
 	}
+	
+	public void imgProc() {
+        cvSink = CameraServer.getInstance().getVideo();
+        //System.out.println(source.get(80, 60));
+        cvSink.grabFrame(source);
+        process(source);
+	}
 
 
 }
-
