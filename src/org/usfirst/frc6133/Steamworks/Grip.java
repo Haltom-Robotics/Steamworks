@@ -63,15 +63,15 @@ public class Grip implements VisionPipeline {
         	RobotMap.USBcam = new UsbCamera("cam0",0);
         	RobotMap.cam = CameraServer.getInstance();
         	RobotMap.USBcam.setBrightness(10);
-        	RobotMap.USBcam.setFPS(10);
+        	RobotMap.USBcam.setFPS(5);
         	RobotMap.USBcam.setResolution(320, 240);
         	RobotMap.cam.startAutomaticCapture(RobotMap.USBcam);
-        	//cvSink = CameraServer.getInstance().getVideo();
-        	//outputStream = CameraServer.getInstance().putVideo("Raw Input", 160, 120);
+        	cvSink = CameraServer.getInstance().getVideo();
+        	outputStream = CameraServer.getInstance().putVideo("Raw Input", 320, 240);
         	while(!Thread.interrupted()) {
-        		//cvSink.grabFrame(source);
+        		cvSink.grabFrame(source);
         		//if (grabSource) { System.out.println("Grabbing Source"); process(source); grabSource = false; }
-        		//outputStream.putFrame(source);
+        		outputStream.putFrame(source);
         	}
         }).start();
 	}
@@ -263,11 +263,11 @@ public class Grip implements VisionPipeline {
 	private void findCenterX() {
 				
 		if (convexHullsOutput.isEmpty())
-			center = -2.0;
+			center = -2000.0;
 		else if (convexHullsOutput.size() < 2)
-			center = -1.0;
+			center = -1000.0;
 		else if (convexHullsOutput.size() > 2)
-			center = -3.0;
+			center = -3000.0;
 		else {
 			r1 = Imgproc.boundingRect(convexHullsOutput.get(0));
 			r2 = Imgproc.boundingRect(convexHullsOutput.get(1));
@@ -287,8 +287,8 @@ public class Grip implements VisionPipeline {
 	 */
 	public double reportDeltaX() {
 		findCenterX();
-		if (center < 0)
-			deltaX = center * 1000;
+		if (center < -500)
+			deltaX = center;
 		else
 			deltaX = center - (IMG_WIDTH / 2.0);
 		

@@ -26,8 +26,11 @@ public class AutonomousCommand extends Command {
 	private boolean blueAlliance = false;
 	private int lift = 0;
 	private double t;
+	private double deltaX;
 	private boolean done = false;
-	private final double Kp = 0.25;
+	private boolean imgProc = false;
+	private boolean imgGood = false;
+	private final double Kp = 0.015;
     public AutonomousCommand() {
     	requires(Robot.drivetrain);
     }
@@ -36,8 +39,8 @@ public class AutonomousCommand extends Command {
     protected void initialize() {
     	done = false;
     	//RobotMap.gyro.reset();
-    	if (RobotMap.allianceChooser.getSelected() == "blue")
-        	blueAlliance = true;
+    	//if (RobotMap.allianceChooser.getSelected() == "blue")
+        //	blueAlliance = true;
         if (RobotMap.liftChooser.getSelected() == "left")
         	lift = 1;
         else if (RobotMap.liftChooser.getSelected() == "mid")
@@ -54,30 +57,77 @@ public class AutonomousCommand extends Command {
     	if (lift == 2)
     	{
     		double angle = RobotMap.gyro.getAngle();
-    		if (t < 0.25)
-    			RobotMap.drivetrainRobotDrive.drive(-.1, -angle*Kp);
+    		if (t < 0.05)
+    			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
     		else if (t < .75)
-    			RobotMap.drivetrainRobotDrive.drive(-.15, -angle*Kp);
-    		else if (t < 5.1)
-    			RobotMap.drivetrainRobotDrive.drive(-.2, -angle*Kp);
+    			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
+    		else if (t < 8.1)
+    			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
     		else {    		
     			RobotMap.drivetrainRobotDrive.drive(0, 0);
     			done = true;
     		}
     		Timer.delay(0.004);
     	}
-    	if (lift == 4)
+    	else if (lift == 1)
     	{
-    		if (t < 0.25)
-    			RobotMap.drivetrainRobotDrive.drive(-.1, 0);
+    		double angle = RobotMap.gyro.getAngle();
+    		if (t < 0.05)
+    			RobotMap.drivetrainRobotDrive.drive(-.1, -angle*Kp);
     		else if (t < .75)
-    			RobotMap.drivetrainRobotDrive.drive(-.2, 0);
-    		else if (t < 4)
-    			RobotMap.drivetrainRobotDrive.drive(-.3, 0);
+    			RobotMap.drivetrainRobotDrive.drive(-.2, -angle*Kp);
+    		else if (t < 4.1)
+    			RobotMap.drivetrainRobotDrive.drive(-.25, -angle*Kp);
+    		else if (t < 4.9)
+    			RobotMap.drivetrainRobotDrive.drive(0, -(angle+45)*Kp);
+    		else if (t < 5.1)
+    		{
+    			if (!imgProc) {
+    				Robot.grip.imgProc();
+    				imgProc = true;
+    				RobotMap.gyro.reset();
+    				deltaX = Robot.grip.reportDeltaX();
+    				if (deltaX != -3000.0 && deltaX != -2000.0 && deltaX != -1000.0)
+    					imgGood = true;
+    			}
+    		} 
+    		else if (t < 5.9)
+    		{
+    			if (imgGood) {
+    				RobotMap.drivetrainRobotDrive.drive(0, -(angle+deltaX)*Kp);
+    			} else {
+    				RobotMap.drivetrainRobotDrive.drive(0, 0);
+    			}
+    		} else if (t < 6.01) {
+    			RobotMap.drivetrainRobotDrive.drive(0, 0);
+    			RobotMap.gyro.reset();
+    		}
+    		else if (t < 9.1) {
+    			if (imgGood) 
+    				RobotMap.drivetrainRobotDrive.drive(-.3, -angle*Kp);
+    			else
+    				RobotMap.drivetrainRobotDrive.drive(0, 0);
+    		}
     		else {    		
     			RobotMap.drivetrainRobotDrive.drive(0, 0);
     			done = true;
     		}
+    		Timer.delay(0.004);
+    	}
+    	else if (lift == 4)
+    	{
+    		double angle = RobotMap.gyro.getAngle();
+    		if (t < 0.25)
+    			RobotMap.drivetrainRobotDrive.drive(-.1, -angle*Kp);
+    		else if (t < .75)
+    			RobotMap.drivetrainRobotDrive.drive(-.2, -angle*Kp);
+    		else if (t < 5.1)
+    			RobotMap.drivetrainRobotDrive.drive(-.3, -angle*Kp);
+    		else {    		
+    			RobotMap.drivetrainRobotDrive.drive(0, 0);
+    			done = true;
+    		}
+    		Timer.delay(0.004);
     	}
     }
 

@@ -71,9 +71,6 @@ public class Drivetrain extends Subsystem {
     
     public void Gyro() {
     	SmartDashboard.putNumber("Gyro Angle", RobotMap.gyro.getAngle());
-    	SmartDashboard.putNumber("Gyro Center", RobotMap.gyro.getCenter());
-    	SmartDashboard.putNumber("Gyro Offset", RobotMap.gyro.getOffset());
-    	SmartDashboard.putNumber("Gyro Rate", RobotMap.gyro.getRate());
     	Timer.delay(0.005);
     }
     
@@ -166,8 +163,8 @@ public class Drivetrain extends Subsystem {
     	moveValue = joystick.getRawAxis(1) * -1*(joystick.getRawAxis(3)-1)/2;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = -1*(joystick.getRawAxis(3)-1)/2 * joystick.getRawAxis(2);
-    	rotateValue = Math.min(rotateValue, .7);
-    	rotateValue = Math.max(rotateValue, -.7);
+    	rotateValue = Math.min(rotateValue, .66);
+    	rotateValue = Math.max(rotateValue, -.66);
 
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
     	robotDrive.arcadeDrive(moveValue, rotateValue);

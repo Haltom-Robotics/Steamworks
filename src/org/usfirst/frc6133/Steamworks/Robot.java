@@ -40,8 +40,8 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	RobotMap.init();
-    	//grip = new Grip();
-    	//grip.initCamera();
+    	grip = new Grip();
+    	grip.initCamera();
     	//Timer.delay(2);
     	//try {
         //	ahrs = new AHRS(SerialPort.Port.kUSB);
@@ -53,8 +53,6 @@ public class Robot extends IterativeRobot {
         drivetrain = new Drivetrain();
         //shooter = new Shooter();
         winch = new Winch();
-        RobotMap.gyro.initGyro();
-        RobotMap.gyro.setSensitivity(0.015);
                
         oi = new OI();
         
@@ -87,6 +85,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
+    	RobotMap.gyro.reset();
     	if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -105,10 +104,10 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         Scheduler.getInstance().removeAll();
         //RobotMap.gyro.reset();
-        if (RobotMap.joySelect.getSelected() == "0") joyMode = 0;
-        if (RobotMap.joySelect.getSelected() == "1") joyMode = 1;
-        if (RobotMap.joySelect.getSelected() == "2") joyMode = 2;
-        autonomousCommand = new SwitchJoystickStyle();
+        //if (RobotMap.joySelect.getSelected() == "0") joyMode = 0;
+        //if (RobotMap.joySelect.getSelected() == "1") joyMode = 1;
+        //if (RobotMap.joySelect.getSelected() == "2") joyMode = 2;
+        autonomousCommand = new JoyDrive2();;
         autonomousCommand.start();
     }
 

@@ -43,7 +43,7 @@ public class JoyDrive2 extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.drivetrain.takeJoystickInputs2(Robot.oi.getJoystick());
-    	Robot.drivetrain.Gyro();
+    	//Robot.drivetrain.Gyro();
     	//if (Robot.ahrs != null)
     	//	Robot.drivetrain.DataMonitor();
     }

@@ -4,19 +4,18 @@ import org.usfirst.frc6133.Steamworks.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ClimbRope extends Command {
+public class StopShooter extends Command {
 
 
-    public ClimbRope() {
-    	requires(Robot.winch);
+    public StopShooter() {
+    	requires(Robot.shooter);
     }
 
     protected void initialize() {
-    	Robot.winch.triggerWinch();
+    	//Robot.shooter.stop();
     }
 
     protected void execute() {
-    	Robot.winch.triggerWinch();
     }
 
     protected boolean isFinished() {
@@ -24,7 +23,7 @@ public class ClimbRope extends Command {
     }
 
     protected void end() {
-    	Robot.winch.stop();
+    	//Robot.shooter.stop();
     }
 
     protected void interrupted() {
