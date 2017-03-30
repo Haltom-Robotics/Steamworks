@@ -14,16 +14,44 @@ package org.usfirst.frc6133.Steamworks.subsystems;
 import org.usfirst.frc6133.Steamworks.RobotMap;
 import org.usfirst.frc6133.Steamworks.commands.*;
 
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /**
  *
  */
 public class Shooter extends Subsystem {
+	private final Servo servo = RobotMap.shooterServo;
+	
+	public void initDefaultCommand() {
+		setDefaultCommand(new FuelClose());
+	}
+	
+	public void stage1() {
+		servo.set(0.);
+	}
+	
+	public void stage2() {
+		servo.set(.66);
+	}
+	
+	public void stage3() {
+		servo.set(1.);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * Old Shooter class code, preserved in case we need to revert
+	 
 	public final Victor leftMotor = RobotMap.shooterLeftMotor;
 	public final Victor rightMotor = RobotMap.shooterRightMotor;
 	public final RobotDrive launcher = RobotMap.shooterLauncher;
@@ -34,9 +62,9 @@ public class Shooter extends Subsystem {
 	private double launcherSpeed = 0;
 
     public void initDefaultCommand() {
-    	setDefaultCommand(new StopShooter());
+    	//setDefaultCommand(new StopShooter());
     }
-    /*
+    
     private void updateBeltSpeedFromDashboard() {
     	String b = RobotMap.beltSpeed.getSelected();
     	    	

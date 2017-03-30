@@ -1,16 +1,16 @@
 package org.usfirst.frc6133.Steamworks;
 
 //import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.I2C;
+//import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.SerialPort;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc6133.Steamworks.commands.*;
 import org.usfirst.frc6133.Steamworks.subsystems.*;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,7 +22,7 @@ import com.kauailabs.navx.frc.AHRS;
 public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
-    public static AHRS ahrs;
+    //public static AHRS ahrs;
     public static Grip grip;
 
     public static OI oi;

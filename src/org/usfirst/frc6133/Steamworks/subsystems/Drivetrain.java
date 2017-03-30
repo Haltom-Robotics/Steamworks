@@ -11,20 +11,20 @@
 
 package org.usfirst.frc6133.Steamworks.subsystems;
 
-import org.usfirst.frc6133.Steamworks.Robot;
+//import org.usfirst.frc6133.Steamworks.Robot;
 import org.usfirst.frc6133.Steamworks.RobotMap;
 import org.usfirst.frc6133.Steamworks.commands.*;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.GenericHID;
 //import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -45,15 +45,15 @@ public class Drivetrain extends Subsystem {
     private double moveValue;
     private double rotateValue;
     
-    private PIDController turnController;
+    //private PIDController turnController;
     
-    private static final double kP = 0.03;
-    private static final double kI = 0.00;
-    private static final double kD = 0.00;
-    private static final double kF = 0.00;
+    //private static final double kP = 0.03;
+    //private static final double kI = 0.00;
+    //private static final double kD = 0.00;
+    //private static final double kF = 0.00;
 
-    private static final double kToleranceDegrees = 2.0f;
-    private static double rotateAngle;
+    //private static final double kToleranceDegrees = 2.0f;
+    //private static double rotateAngle;
 
 
     public void initDefaultCommand() {
@@ -69,10 +69,10 @@ public class Drivetrain extends Subsystem {
         rightMotor3.changeControlMode(TalonControlMode.Follower);
     }
     
-    public void Gyro() {
-    	SmartDashboard.putNumber("Gyro Angle", RobotMap.gyro.getAngle());
-    	Timer.delay(0.005);
-    }
+    //public void Gyro() {
+    //	SmartDashboard.putNumber("Gyro Angle", RobotMap.gyro.getAngle());
+    //	Timer.delay(0.005);
+    //}
     
     /*
     public void DataMonitor() {
@@ -176,7 +176,7 @@ public class Drivetrain extends Subsystem {
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
     }
-    
+    /*
     public void takeJoystickInputs3(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
     	moveValue = joystick.getRawAxis(2)+ joystick.getRawAxis(3)*-1;
@@ -193,10 +193,10 @@ public class Drivetrain extends Subsystem {
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
     }
-    
-    public void updateRotateAngle(double newAngle) {
-    	rotateAngle = newAngle;
-    }
+    */
+    //public void updateRotateAngle(double newAngle) {
+    //	rotateAngle = newAngle;
+    //}
     
     
 

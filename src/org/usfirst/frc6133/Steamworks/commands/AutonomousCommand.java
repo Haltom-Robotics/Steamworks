@@ -12,7 +12,7 @@
 package org.usfirst.frc6133.Steamworks.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc6133.Steamworks.Robot;
 import org.usfirst.frc6133.Steamworks.RobotMap;
@@ -28,8 +28,6 @@ public class AutonomousCommand extends Command {
 	private double t;
 	private double deltaX;
 	private boolean done = false;
-	private boolean imgProc = false;
-	private boolean imgGood = false;
 	private final double Kp = 0.015;
     public AutonomousCommand() {
     	requires(Robot.drivetrain);
@@ -38,9 +36,9 @@ public class AutonomousCommand extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	done = false;
-    	//RobotMap.gyro.reset();
-    	//if (RobotMap.allianceChooser.getSelected() == "blue")
-        //	blueAlliance = true;
+
+    	if (RobotMap.allianceChooser.getSelected() == "blue")
+        	blueAlliance = true;
         if (RobotMap.liftChooser.getSelected() == "left")
         	lift = 1;
         else if (RobotMap.liftChooser.getSelected() == "mid")
@@ -49,11 +47,14 @@ public class AutonomousCommand extends Command {
         	lift = 3;
         else if (RobotMap.liftChooser.getSelected() == "none")
         	lift = 4;
+        else if (RobotMap.liftChooser.getSelected() == "fuel")
+        	lift = 5;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	t = 15 - Timer.getMatchTime();
+    	//MIDDLE LIFT
     	if (lift == 2)
     	{
     		double angle = RobotMap.gyro.getAngle();
@@ -69,6 +70,7 @@ public class AutonomousCommand extends Command {
     		}
     		Timer.delay(0.004);
     	}
+    	//LEFT LIFT
     	else if (lift == 1)
     	{
     		double angle = RobotMap.gyro.getAngle();
@@ -82,31 +84,18 @@ public class AutonomousCommand extends Command {
     			RobotMap.drivetrainRobotDrive.drive(0, -(angle+45)*Kp);
     		else if (t < 5.1)
     		{
-    			if (!imgProc) {
-    				Robot.grip.imgProc();
-    				imgProc = true;
-    				RobotMap.gyro.reset();
-    				deltaX = Robot.grip.reportDeltaX();
-    				if (deltaX != -3000.0 && deltaX != -2000.0 && deltaX != -1000.0)
-    					imgGood = true;
-    			}
+
     		} 
     		else if (t < 5.9)
     		{
-    			if (imgGood) {
-    				RobotMap.drivetrainRobotDrive.drive(0, -(angle+deltaX)*Kp);
-    			} else {
-    				RobotMap.drivetrainRobotDrive.drive(0, 0);
-    			}
+    			RobotMap.drivetrainRobotDrive.drive(0, -(angle+deltaX)*Kp);
+    			
     		} else if (t < 6.01) {
     			RobotMap.drivetrainRobotDrive.drive(0, 0);
     			RobotMap.gyro.reset();
     		}
     		else if (t < 9.1) {
-    			if (imgGood) 
-    				RobotMap.drivetrainRobotDrive.drive(-.3, -angle*Kp);
-    			else
-    				RobotMap.drivetrainRobotDrive.drive(0, 0);
+    			RobotMap.drivetrainRobotDrive.drive(-.3, -angle*Kp);
     		}
     		else {    		
     			RobotMap.drivetrainRobotDrive.drive(0, 0);
@@ -114,6 +103,7 @@ public class AutonomousCommand extends Command {
     		}
     		Timer.delay(0.004);
     	}
+    	//NO LIFT - DRIVE STRAIGHT
     	else if (lift == 4)
     	{
     		double angle = RobotMap.gyro.getAngle();
@@ -128,6 +118,18 @@ public class AutonomousCommand extends Command {
     			done = true;
     		}
     		Timer.delay(0.004);
+    	}
+    	//NO LIFT - DROP FUEL
+    	else if (lift == 5) {
+    		//Due to symmetry, we need to operate differently for Red vs Blue
+    		//Are we the Blue Alliance?
+    		if (blueAlliance) {
+    			
+    		} 
+    		//We are the Red Alliance
+    		else {
+    			
+    		}
     	}
     }
 

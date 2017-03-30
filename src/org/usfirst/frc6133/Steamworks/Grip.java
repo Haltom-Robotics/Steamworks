@@ -1,26 +1,26 @@
 package org.usfirst.frc6133.Steamworks;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.HashMap;
+//import java.io.File;
+//import java.io.FileWriter;
+//import java.io.IOException;
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Map;
+//import java.util.stream.Collectors;
+//import java.util.HashMap;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.vision.VisionPipeline;
+//import edu.wpi.first.wpilibj.vision.VisionPipeline;
 
 import org.opencv.core.*;
-import org.opencv.core.Core.*;
-import org.opencv.features2d.FeatureDetector;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.*;
-import org.opencv.objdetect.*;
+//import org.opencv.core.Core.*;
+//import org.opencv.features2d.FeatureDetector;
+//import org.opencv.imgcodecs.Imgcodecs;
+//import org.opencv.imgproc.*;
+//import org.opencv.objdetect.*;
 
 /**
 * Grip class.
@@ -29,20 +29,20 @@ import org.opencv.objdetect.*;
 *
 * @author GRIP
 */
-public class Grip implements VisionPipeline {
-
+public class Grip /*implements VisionPipeline*/ {
+	/*
 	//Outputs
 	private Mat hslThresholdOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
 	private final int IMG_WIDTH = 320;
-	private final int IMG_HEIGHT = 240;
+	//private final int IMG_HEIGHT = 240;
 	private double center;
 	private double deltaX;
 	private Rect r1;
 	private Rect r2;
-	
+	*/
 	public int w1;
 	public int w2;
 	public int h1;
@@ -75,10 +75,8 @@ public class Grip implements VisionPipeline {
         	}
         }).start();
 	}
-
-	/**
-	 * This is the primary method that runs the entire pipeline and updates the outputs.
-	 */
+	/*
+	 //* This is the primary method that runs the entire pipeline and updates the outputs.
 	@Override	public void process(Mat source0) {
 		// Step HSL_Threshold0:
 		Mat hslThresholdInput = source0;
@@ -113,48 +111,38 @@ public class Grip implements VisionPipeline {
 
 	}
 
-	/**
-	 * This method is a generated getter for the output of a HSL_Threshold.
-	 * @return Mat output from HSL_Threshold.
-	 */
+	 //* This method is a generated getter for the output of a HSL_Threshold.
+	 //* @return Mat output from HSL_Threshold.
 	public Mat hslThresholdOutput() {
 		return hslThresholdOutput;
 	}
 
-	/**
-	 * This method is a generated getter for the output of a Find_Contours.
-	 * @return ArrayList<MatOfPoint> output from Find_Contours.
-	 */
+	 //* This method is a generated getter for the output of a Find_Contours.
+	 //* @return ArrayList<MatOfPoint> output from Find_Contours.
 	public ArrayList<MatOfPoint> findContoursOutput() {
 		return findContoursOutput;
 	}
 
-	/**
-	 * This method is a generated getter for the output of a Filter_Contours.
-	 * @return ArrayList<MatOfPoint> output from Filter_Contours.
-	 */
+	 //* This method is a generated getter for the output of a Filter_Contours.
+	 //* @return ArrayList<MatOfPoint> output from Filter_Contours.
 	public ArrayList<MatOfPoint> filterContoursOutput() {
 		return filterContoursOutput;
 	}
 
-	/**
-	 * This method is a generated getter for the output of a Convex_Hulls.
-	 * @return ArrayList<MatOfPoint> output from Convex_Hulls.
-	 */
+	 //* This method is a generated getter for the output of a Convex_Hulls.
+	 // @return ArrayList<MatOfPoint> output from Convex_Hulls.
 	public ArrayList<MatOfPoint> convexHullsOutput() {
 		return convexHullsOutput;
 	}
 
 
-	/**
-	 * Segment an image based on hue, saturation, and luminance ranges.
-	 *
-	 * @param input The image on which to perform the HSL threshold.
-	 * @param hue The min and max hue
-	 * @param sat The min and max saturation
-	 * @param lum The min and max luminance
-	 * @param output The image in which to store the output.
-	 */
+
+	 //* Segment an image based on hue, saturation, and luminance ranges.
+	 //* @param input The image on which to perform the HSL threshold.
+	 //* @param hue The min and max hue
+	 //* @param sat The min and max saturation
+	 //* @param lum The min and max luminance
+	 //* @param output The image in which to store the output.
 	private void hslThreshold(Mat input, double[] hue, double[] sat, double[] lum,
 		Mat out) {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HLS);
@@ -162,13 +150,11 @@ public class Grip implements VisionPipeline {
 			new Scalar(hue[1], lum[1], sat[1]), out);
 	}
 
-	/**
-	 * Sets the values of pixels in a binary image to their distance to the nearest black pixel.
-	 * @param input The image on which to perform the Distance Transform.
-	 * @param type The Transform.
-	 * @param maskSize the size of the mask.
-	 * @param output The image in which to store the output.
-	 */
+	 //* Sets the values of pixels in a binary image to their distance to the nearest black pixel.
+	 //* @param input The image on which to perform the Distance Transform.
+	 //* @param type The Transform.
+	 //* @param maskSize the size of the mask.
+	 //* @param output The image in which to store the output.
 	private void findContours(Mat input, boolean externalOnly,
 		List<MatOfPoint> contours) {
 		Mat hierarchy = new Mat();
@@ -185,22 +171,22 @@ public class Grip implements VisionPipeline {
 	}
 
 
-	/**
-	 * Filters out contours that do not meet certain criteria.
-	 * @param inputContours is the input list of contours
-	 * @param output is the the output list of contours
-	 * @param minArea is the minimum area of a contour that will be kept
-	 * @param minPerimeter is the minimum perimeter of a contour that will be kept
-	 * @param minWidth minimum width of a contour
-	 * @param maxWidth maximum width
-	 * @param minHeight minimum height
-	 * @param maxHeight maximimum height
-	 * @param Solidity the minimum and maximum solidity of a contour
-	 * @param minVertexCount minimum vertex Count of the contours
-	 * @param maxVertexCount maximum vertex Count
-	 * @param minRatio minimum ratio of width to height
-	 * @param maxRatio maximum ratio of width to height
-	 */
+	
+	// * Filters out contours that do not meet certain criteria.
+	// * @param inputContours is the input list of contours
+	// * @param output is the the output list of contours
+	// * @param minArea is the minimum area of a contour that will be kept
+	// * @param minPerimeter is the minimum perimeter of a contour that will be kept
+	// * @param minWidth minimum width of a contour
+	// * @param maxWidth maximum width
+	// * @param minHeight minimum height
+	// * @param maxHeight maximimum height
+	// * @param Solidity the minimum and maximum solidity of a contour
+	// * @param minVertexCount minimum vertex Count of the contours
+	// * @param maxVertexCount maximum vertex Count
+	// * @param minRatio minimum ratio of width to height
+	// * @param maxRatio maximum ratio of width to height
+
 	private void filterContours(List<MatOfPoint> inputContours, double minArea,
 		double minPerimeter, double minWidth, double maxWidth, double minHeight, double
 		maxHeight, double[] solidity, double maxVertexCount, double minVertexCount, double
@@ -233,11 +219,11 @@ public class Grip implements VisionPipeline {
 		}
 	}
 
-	/**
-	 * Compute the convex hulls of contours.
-	 * @param inputContours The contours on which to perform the operation.
-	 * @param outputContours The contours where the output will be stored.
-	 */
+
+	 //* Compute the convex hulls of contours.
+	 //* @param inputContours The contours on which to perform the operation.
+	 //* @param outputContours The contours where the output will be stored.
+
 	private void convexHulls(List<MatOfPoint> inputContours,
 		ArrayList<MatOfPoint> outputContours) {
 		final MatOfInt hull = new MatOfInt();
@@ -256,10 +242,7 @@ public class Grip implements VisionPipeline {
 		}
 	}
 
-	/**
-	 * 
-	 * 
-	 */
+
 	private void findCenterX() {
 				
 		if (convexHullsOutput.isEmpty())
@@ -280,11 +263,7 @@ public class Grip implements VisionPipeline {
 			center = (r1.x + (r1.width / 2) + r2.x + (r2.width / 2)) / 2;
 		}
 	}
-	
-	/**
-	 * 
-	 * 
-	 */
+
 	public double reportDeltaX() {
 		findCenterX();
 		if (center < -500)
@@ -301,6 +280,6 @@ public class Grip implements VisionPipeline {
         cvSink.grabFrame(source);
         process(source);
 	}
-
-
+	
+	*/
 }
