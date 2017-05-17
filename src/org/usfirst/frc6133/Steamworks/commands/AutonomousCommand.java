@@ -10,12 +10,12 @@
 
 
 package org.usfirst.frc6133.Steamworks.commands;
+import org.usfirst.frc6133.Steamworks.Robot;
+import org.usfirst.frc6133.Steamworks.RobotMap;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc6133.Steamworks.Robot;
-import org.usfirst.frc6133.Steamworks.RobotMap;
 
 /**
  *
@@ -26,9 +26,16 @@ public class AutonomousCommand extends Command {
 	private boolean blueAlliance = false;
 	private int lift = 0;
 	private double t;
-	private double deltaX;
+	private boolean sonar_distance = false;
+	private boolean rotate_done = false;
 	private boolean done = false;
+	private double clock = 1;
 	private final double Kp = 0.015;
+	private int SONAR_DISTANCE = 89;
+	private final int SONAR_DISTANCE_BLUE = 89;
+	private final int SONAR_DISTANCE_RED = 89;
+	//private final double dKp = 0.374;
+	private double raw_volts;
     public AutonomousCommand() {
     	requires(Robot.drivetrain);
     }
@@ -37,10 +44,17 @@ public class AutonomousCommand extends Command {
     protected void initialize() {
     	done = false;
 
-    	if (RobotMap.allianceChooser.getSelected() == "blue")
+    	if (RobotMap.allianceChooser.getSelected() == "blue") {
         	blueAlliance = true;
-        if (RobotMap.liftChooser.getSelected() == "left")
+        	SONAR_DISTANCE = SONAR_DISTANCE_BLUE;
+    	} else
+    	{
+    		SONAR_DISTANCE = SONAR_DISTANCE_RED;
+    	}
+        if (RobotMap.liftChooser.getSelected() == "left") {
         	lift = 1;
+        	//System.out.println("Start Sonar: " + RobotMap.sonar.getVoltage());
+        }
         else if (RobotMap.liftChooser.getSelected() == "mid")
         	lift = 2;
         else if (RobotMap.liftChooser.getSelected() == "right")
@@ -61,9 +75,9 @@ public class AutonomousCommand extends Command {
     		if (t < 0.05)
     			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
     		else if (t < .75)
-    			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
+    			RobotMap.drivetrainRobotDrive.drive(-.27, -angle*Kp);
     		else if (t < 8.1)
-    			RobotMap.drivetrainRobotDrive.drive(-.35, -angle*Kp);
+    			RobotMap.drivetrainRobotDrive.drive(-.2, -angle*Kp);
     		else {    		
     			RobotMap.drivetrainRobotDrive.drive(0, 0);
     			done = true;
@@ -73,35 +87,89 @@ public class AutonomousCommand extends Command {
     	//LEFT LIFT
     	else if (lift == 1)
     	{
-    		double angle = RobotMap.gyro.getAngle();
-    		if (t < 0.05)
-    			RobotMap.drivetrainRobotDrive.drive(-.1, -angle*Kp);
-    		else if (t < .75)
-    			RobotMap.drivetrainRobotDrive.drive(-.2, -angle*Kp);
-    		else if (t < 4.1)
-    			RobotMap.drivetrainRobotDrive.drive(-.25, -angle*Kp);
-    		else if (t < 4.9)
-    			RobotMap.drivetrainRobotDrive.drive(0, -(angle+45)*Kp);
-    		else if (t < 5.1)
-    		{
-
-    		} 
-    		else if (t < 5.9)
-    		{
-    			RobotMap.drivetrainRobotDrive.drive(0, -(angle+deltaX)*Kp);
+    		if (!sonar_distance) {
+    			raw_volts = RobotMap.sonar.getVoltage() * 512 / 5;
+    			double angle = RobotMap.gyro.getAngle();
+    			if (raw_volts < SONAR_DISTANCE) {
+    				double move = (100 - raw_volts) / -100.0;
+    				move = Math.max(move,-.35);
+    				move = Math.min(move, -0.15);
+    				RobotMap.drivetrainRobotDrive.drive(move,-angle*Kp);
+    				System.out.println(raw_volts);
+    				Timer.delay(0.049);
+    			} else {
+    				sonar_distance = true;
+    				clock = t;
+    				System.out.println("Time: " + t + "\nSonar: " + raw_volts);
+    			}
     			
-    		} else if (t < 6.01) {
-    			RobotMap.drivetrainRobotDrive.drive(0, 0);
-    			RobotMap.gyro.reset();
+    		} else if (!rotate_done){
+    			double angle = RobotMap.gyro.getAngle();
+    			if (t < clock + 0.1) {
+    				RobotMap.drivetrainRobotDrive.drive(0, (45-angle)*0.02);
+    				Timer.delay(0.004);
+    				//System.out.println("Turning.");
+    			}
+    			else {
+    				rotate_done = true;
+    				clock = t;
+    				//System.out.println("Done turning");
+    				
+    			}
+    		} else {
+    			double angle = RobotMap.gyro.getAngle();
+    			if (t < clock + 7) {
+    				RobotMap.drivetrainRobotDrive.drive(-.33, (45-angle)*0.02);
+    				//System.out.println("Forward.");
+    			} else {
+    				RobotMap.drivetrainRobotDrive.drive(0, 0);
+    				//System.out.println("Finished!!!");
+    			}
+    			Timer.delay(0.004);
     		}
-    		else if (t < 9.1) {
-    			RobotMap.drivetrainRobotDrive.drive(-.3, -angle*Kp);
+    		
+    	}
+    	//Right
+    	else if (lift == 3) {
+    		if (!sonar_distance) {
+    			raw_volts = RobotMap.sonar.getVoltage() * 512 / 5;
+    			double angle = RobotMap.gyro.getAngle();
+    			if (raw_volts < SONAR_DISTANCE) {
+    				double move = (100 - raw_volts) / -100.0;
+    				move = Math.max(move,-.35);
+    				move = Math.min(move, -0.15);
+    				RobotMap.drivetrainRobotDrive.drive(move,-angle*Kp);
+    				//System.out.println(raw_volts);
+    				Timer.delay(0.049);
+    			} else {
+    				sonar_distance = true;
+    				clock = t;
+    				System.out.println("Time: " + t + "\nSonar: " + raw_volts);
+    			}
+    			
+    		} else if (!rotate_done){
+    			double angle = RobotMap.gyro.getAngle();
+    			if (t > clock + 0.1) {
+    				rotate_done = true;
+    				clock = t;
+    				//System.out.println("Done turning");
+    			}
+    			else {
+    				RobotMap.drivetrainRobotDrive.drive(0, (-45-angle)*0.02);
+    				Timer.delay(0.004);
+    				//System.out.println("Turning.");
+    			}
+    		} else {
+    			double angle = RobotMap.gyro.getAngle();
+    			if (t < clock + 7) {
+    				RobotMap.drivetrainRobotDrive.drive(-.33, (-45-angle)*0.02);
+    				//System.out.println("Forward.");
+    			} else {
+    				RobotMap.drivetrainRobotDrive.drive(0, 0);
+    				//System.out.println("Finished!!!");
+    			}
+    			Timer.delay(0.004);
     		}
-    		else {    		
-    			RobotMap.drivetrainRobotDrive.drive(0, 0);
-    			done = true;
-    		}
-    		Timer.delay(0.004);
     	}
     	//NO LIFT - DRIVE STRAIGHT
     	else if (lift == 4)

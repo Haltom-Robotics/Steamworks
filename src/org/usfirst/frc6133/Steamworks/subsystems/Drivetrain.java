@@ -13,7 +13,8 @@ package org.usfirst.frc6133.Steamworks.subsystems;
 
 //import org.usfirst.frc6133.Steamworks.Robot;
 import org.usfirst.frc6133.Steamworks.RobotMap;
-import org.usfirst.frc6133.Steamworks.commands.*;
+import org.usfirst.frc6133.Steamworks.commands.JoyDrive3;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 //import com.kauailabs.navx.frc.AHRS;
@@ -44,6 +45,7 @@ public class Drivetrain extends Subsystem {
 
     private double moveValue;
     private double rotateValue;
+    private double sonarVolts;
     
     //private PIDController turnController;
     
@@ -57,7 +59,7 @@ public class Drivetrain extends Subsystem {
 
 
     public void initDefaultCommand() {
-        setDefaultCommand(new JoyDrive2());
+        setDefaultCommand(new JoyDrive3());
     }
     
     //Called in the initialize phase of JoyDrive command.
@@ -142,6 +144,12 @@ public class Drivetrain extends Subsystem {
     	robotDrive.drive(0, 0);
     }
     
+    public void callSonar() {
+    	sonarVolts = RobotMap.sonar.getValue();
+    	System.out.println(sonarVolts);
+    	Timer.delay(0.049);
+    }
+    
     public void takeJoystickInputs(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
     	moveValue = joystick.getRawAxis(1);
@@ -163,11 +171,12 @@ public class Drivetrain extends Subsystem {
     	moveValue = joystick.getRawAxis(1) * -1*(joystick.getRawAxis(3)-1)/2;
     	//update the rotateValue so that the z-axis is cubed and then multiplied by the "governor" to control rotate speed & direction
     	rotateValue = -1*(joystick.getRawAxis(3)-1)/2 * joystick.getRawAxis(2);
-    	rotateValue = Math.min(rotateValue, .66);
-    	rotateValue = Math.max(rotateValue, -.66);
-
+    	rotateValue = Math.min(rotateValue, .75);
+    	rotateValue = Math.max(rotateValue, -.75);
+    	//rotateValue = (-50-RobotMap.gyro.getAngle())*0.015;
     	//use basic arcade drive for leftMotor1 and rightMotor1, then update the remaining motors
     	robotDrive.arcadeDrive(moveValue, rotateValue);
+    	//System.out.println(RobotMap.gyro.getAngle());
     	
     	Timer.delay(0.005);
     	//the remaining left & right motors need to mimic the base motors
@@ -175,8 +184,10 @@ public class Drivetrain extends Subsystem {
     	leftMotor3.set(leftMotor1.getDeviceID());
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
+    	
+    	
     }
-    /*
+    
     public void takeJoystickInputs3(GenericHID joystick) {
     	//update the moveValue so that the y-axis is squared input and then multiplied by the "governor" to control max speed & direction
     	moveValue = joystick.getRawAxis(2)+ joystick.getRawAxis(3)*-1;
@@ -192,8 +203,9 @@ public class Drivetrain extends Subsystem {
     	leftMotor3.set(leftMotor1.getDeviceID());
     	rightMotor2.set(rightMotor1.getDeviceID());
     	rightMotor3.set(rightMotor1.getDeviceID());
+    	Timer.delay(.005);
     }
-    */
+    
     //public void updateRotateAngle(double newAngle) {
     //	rotateAngle = newAngle;
     //}

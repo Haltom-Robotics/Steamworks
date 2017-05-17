@@ -12,7 +12,7 @@
 package org.usfirst.frc6133.Steamworks.subsystems;
 
 import org.usfirst.frc6133.Steamworks.RobotMap;
-import org.usfirst.frc6133.Steamworks.commands.*;
+import org.usfirst.frc6133.Steamworks.commands.StopWinch;
 
 import com.ctre.CANTalon;
 

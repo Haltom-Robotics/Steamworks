@@ -1,5 +1,12 @@
 package org.usfirst.frc6133.Steamworks;
 
+import org.usfirst.frc6133.Steamworks.commands.AutonomousCommand;
+import org.usfirst.frc6133.Steamworks.commands.JoyDrive3;
+//import com.kauailabs.navx.frc.AHRS;
+import org.usfirst.frc6133.Steamworks.subsystems.Drivetrain;
+import org.usfirst.frc6133.Steamworks.subsystems.Shooter;
+import org.usfirst.frc6133.Steamworks.subsystems.Winch;
+
 //import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -8,9 +15,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc6133.Steamworks.commands.*;
-import org.usfirst.frc6133.Steamworks.subsystems.*;
-//import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +27,7 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     //public static AHRS ahrs;
-    public static Grip grip;
+    //public static Grip grip;
 
     public static OI oi;
     public static Drivetrain drivetrain;
@@ -40,8 +44,8 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	RobotMap.init();
-    	grip = new Grip();
-    	grip.initCamera();
+    	//grip = new Grip();
+    	//grip.initCamera();
     	//Timer.delay(2);
     	//try {
         //	ahrs = new AHRS(SerialPort.Port.kUSB);
@@ -107,7 +111,7 @@ public class Robot extends IterativeRobot {
         //if (RobotMap.joySelect.getSelected() == "0") joyMode = 0;
         //if (RobotMap.joySelect.getSelected() == "1") joyMode = 1;
         //if (RobotMap.joySelect.getSelected() == "2") joyMode = 2;
-        autonomousCommand = new JoyDrive2();;
+        autonomousCommand = new JoyDrive3();;
         autonomousCommand.start();
     }
 

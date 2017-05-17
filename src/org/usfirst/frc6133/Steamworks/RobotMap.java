@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
@@ -27,6 +28,7 @@ public class RobotMap {
     public static RobotDrive drivetrainRobotDrive;
     public static Servo shooterServo;
     public static ADXRS450_Gyro gyro;
+    public static AnalogInput sonar;
     
     public static UsbCamera USBcam;
     public static CameraServer cam;
@@ -35,13 +37,13 @@ public class RobotMap {
     public static SendableChooser<String> liftChooser;
 
     public static void init() {
-        drivetrainLeftMotor1 = new CANTalon(3);
+        drivetrainLeftMotor1 = new CANTalon(4);
         drivetrainLeftMotor2 = new CANTalon(2);
-        drivetrainLeftMotor3 = new CANTalon(6);
+        drivetrainLeftMotor3 = new CANTalon(8);
         
-        drivetrainRightMotor1 = new CANTalon(5);
-        drivetrainRightMotor2 = new CANTalon(1);
-        drivetrainRightMotor3 = new CANTalon(4);
+        drivetrainRightMotor1 = new CANTalon(6);
+        drivetrainRightMotor2 = new CANTalon(5);
+        drivetrainRightMotor3 = new CANTalon(7);
         
         winchMotor = new CANTalon(7);
 
@@ -55,9 +57,10 @@ public class RobotMap {
         drivetrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
         drivetrainRobotDrive.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         
-        shooterServo = new Servo(0);
+        //shooterServo = new Servo(0);
         
         gyro = new ADXRS450_Gyro();
+        sonar = new AnalogInput(0);
         
         
         allianceChooser = new SendableChooser<String>();

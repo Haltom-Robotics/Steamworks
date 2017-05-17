@@ -1,5 +1,13 @@
 package org.usfirst.frc6133.Steamworks;
 
+//import org.opencv.core.Core.*;
+//import org.opencv.features2d.FeatureDetector;
+//import org.opencv.imgcodecs.Imgcodecs;
+//import org.opencv.imgproc.*;
+//import org.opencv.objdetect.*;
+//import org.opencv.core.Core;
+//import org.opencv.core.Mat;
+
 //import java.io.File;
 //import java.io.FileWriter;
 //import java.io.IOException;
@@ -9,18 +17,11 @@ package org.usfirst.frc6133.Steamworks;
 //import java.util.stream.Collectors;
 //import java.util.HashMap;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
+//import edu.wpi.cscore.CvSink;
+//import edu.wpi.cscore.CvSource;
+//import edu.wpi.cscore.UsbCamera;
+//import edu.wpi.first.wpilibj.CameraServer;
 //import edu.wpi.first.wpilibj.vision.VisionPipeline;
-
-import org.opencv.core.*;
-//import org.opencv.core.Core.*;
-//import org.opencv.features2d.FeatureDetector;
-//import org.opencv.imgcodecs.Imgcodecs;
-//import org.opencv.imgproc.*;
-//import org.opencv.objdetect.*;
 
 /**
 * Grip class.
@@ -42,7 +43,7 @@ public class Grip /*implements VisionPipeline*/ {
 	private double deltaX;
 	private Rect r1;
 	private Rect r2;
-	*/
+	*//*
 	public int w1;
 	public int w2;
 	public int h1;
@@ -75,7 +76,7 @@ public class Grip /*implements VisionPipeline*/ {
         	}
         }).start();
 	}
-	/*
+	
 	 //* This is the primary method that runs the entire pipeline and updates the outputs.
 	@Override	public void process(Mat source0) {
 		// Step HSL_Threshold0:

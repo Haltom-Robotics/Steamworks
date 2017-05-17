@@ -12,7 +12,7 @@
 package org.usfirst.frc6133.Steamworks.subsystems;
 
 import org.usfirst.frc6133.Steamworks.RobotMap;
-import org.usfirst.frc6133.Steamworks.commands.*;
+import org.usfirst.frc6133.Steamworks.commands.FuelClose;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -25,7 +25,7 @@ public class Shooter extends Subsystem {
 	private final Servo servo = RobotMap.shooterServo;
 	
 	public void initDefaultCommand() {
-		setDefaultCommand(new FuelClose());
+		//setDefaultCommand(new FuelClose());
 	}
 	
 	public void stage1() {

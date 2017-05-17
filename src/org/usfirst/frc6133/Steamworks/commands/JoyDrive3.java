@@ -10,8 +10,9 @@
 
 
 package org.usfirst.frc6133.Steamworks.commands;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc6133.Steamworks.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
@@ -42,7 +43,7 @@ public class JoyDrive3 extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.drivetrain.takeJoystickInputs3(Robot.oi.get_xBoxJoystick());
+    	Robot.drivetrain.takeJoystickInputs3(Robot.oi.get_xBoxJoystick());
     	//if (Robot.ahrs != null)
     	//	Robot.drivetrain.DataMonitor();
     }

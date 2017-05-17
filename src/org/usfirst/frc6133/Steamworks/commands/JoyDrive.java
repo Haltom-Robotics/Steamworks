@@ -10,8 +10,9 @@
 
 
 package org.usfirst.frc6133.Steamworks.commands;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc6133.Steamworks.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
